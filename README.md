@@ -1,2 +1,2 @@
 # devops-playground
-Labs for DevOps tools
+Lab for DevOps tools
