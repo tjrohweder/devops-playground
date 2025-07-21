@@ -2,16 +2,20 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+locals {
+  azs = split(",", data.aws_availability_zones.available)
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "6.0.1"
+  version = "6.0.0"
 
   name = var.vpc_name
   cidr = var.vpc_cidr
 
-  azs             = [data.aws_availability_zones.available[0], data.aws_availability_zones.available[1], data.aws_availability_zones.available[2]]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs             = [local.azs[0], local.azs[1], local.azs[2]]
+  private_subnets = [var.private_subnets[0], var.private_subnets[1], var.private_subnets[2]]
+  public_subnets  = [var.public_subnets[0], var.public_subnets[1], var.public_subnets[2]]
 
   enable_nat_gateway = true
   enable_vpn_gateway = true
@@ -24,7 +28,7 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.31"
+  version = "~> 20.37"
 
   cluster_name    = "example"
   cluster_version = "1.33"
