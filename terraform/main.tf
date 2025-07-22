@@ -18,7 +18,7 @@ module "vpc" {
   public_subnets  = [var.public_subnets[0], var.public_subnets[1], var.public_subnets[2]]
 
   enable_nat_gateway = true
-  enable_vpn_gateway = true
+  enable_vpn_gateway = false
 
   tags = {
     Terraform   = "true"
@@ -44,11 +44,11 @@ module "eks" {
     node_pools = ["general-purpose"]
   }
 
-  vpc_id     = "vpc-1234556abcdef"
-  subnet_ids = ["subnet-abcde012", "subnet-bcde012a", "subnet-fghi345a"]
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = [module.vpc.private_subnets]
 
   tags = {
-    Environment = "dev"
     Terraform   = "true"
+    Environment = var.env
   }
 }
