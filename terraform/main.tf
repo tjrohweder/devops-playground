@@ -3,7 +3,7 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  azs = split(",", data.aws_availability_zones.available)
+  azs = data.aws_availability_zones.available.names
 }
 
 module "vpc" {
@@ -13,9 +13,9 @@ module "vpc" {
   name = var.vpc_name
   cidr = var.vpc_cidr
 
-  azs             = [local.azs[0], local.azs[1], local.azs[2]]
-  private_subnets = [var.private_subnets[0], var.private_subnets[1], var.private_subnets[2]]
-  public_subnets  = [var.public_subnets[0], var.public_subnets[1], var.public_subnets[2]]
+  azs             = local.azs
+  private_subnets = var.private_subnets
+  public_subnets  = var.public_subnets
 
   enable_nat_gateway = true
   enable_vpn_gateway = false
@@ -41,7 +41,7 @@ module "eks" {
   }
 
   vpc_id     = module.vpc.vpc_id
-  subnet_ids = [module.vpc.private_subnets]
+  subnet_ids = module.vpc.private_subnets
 
   tags = {
     Terraform   = "true"
