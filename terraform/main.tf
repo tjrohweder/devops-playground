@@ -8,7 +8,7 @@ locals {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "6.0.0"
+  version = "~> 5.21"
 
   name = var.vpc_name
   cidr = var.vpc_cidr
@@ -17,8 +17,7 @@ module "vpc" {
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_nat_gateway = true
-  enable_vpn_gateway = false
+  enable_nat_gateway = var.enable_nat_gateway
 
   tags = {
     Terraform   = "true"
