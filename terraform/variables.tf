@@ -1,5 +1,6 @@
 #General
 variable "env" {}
+variable "region" {}
 
 #VPC
 variable "vpc_name" {}

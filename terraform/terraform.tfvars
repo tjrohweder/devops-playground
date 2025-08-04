@@ -1,5 +1,6 @@
 #General
-env = "dev"
+env    = "dev"
+region = "us-east-1"
 
 #VPC
 vpc_name           = "main"
