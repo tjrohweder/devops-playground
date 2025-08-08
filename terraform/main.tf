@@ -30,9 +30,27 @@ module "eks" {
   cluster_endpoint_public_access           = var.cluster_endpoint_public_access
   enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
 
+  cluster_addons = {
+    coredns                = {}
+    eks-pod-identity-agent = {}
+    kube-proxy             = {}
+    vpc-cni                = {}
+  }
+
   cluster_compute_config = {
     enabled    = true
     node_pools = ["general-purpose"]
+  }
+
+  eks_managed_node_groups = {
+    main = {
+      ami_type       = "AL2023_x86_64_STANDARD"
+      instance_types = ["m6a.large"]
+
+      min_size     = 2
+      max_size     = 10
+      desired_size = 2
+    }
   }
 
   vpc_id     = module.vpc.vpc_id
