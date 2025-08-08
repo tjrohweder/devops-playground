@@ -37,11 +37,6 @@ module "eks" {
     vpc-cni                = {}
   }
 
-  cluster_compute_config = {
-    enabled    = true
-    node_pools = ["general-purpose"]
-  }
-
   eks_managed_node_groups = {
     main = {
       ami_type       = "AL2023_x86_64_STANDARD"
