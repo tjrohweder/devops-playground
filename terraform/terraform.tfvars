@@ -12,5 +12,6 @@ enable_nat_gateway = true
 #EKS
 cluster_name                             = "main"
 cluster_version                          = "1.33"
+cluster_upgrade_policy                   = "STANDARD"
 cluster_endpoint_public_access           = true
 enable_cluster_creator_admin_permissions = true

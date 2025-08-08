@@ -14,6 +14,7 @@ variable "enable_nat_gateway" {
 #EKS
 variable "cluster_name" {}
 variable "cluster_version" {}
+variable "cluster_upgrade_policy" {}
 variable "cluster_endpoint_public_access" {
   type = bool
 }
