@@ -2,6 +2,12 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+resource "null_resource" "kubectl" {
+  provisioner "local-exec" {
+    command = "aws eks --region ${var.region} update-kubeconfig --name ${module.eks.cluster_name}"
+  }
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.21"
@@ -29,12 +35,23 @@ module "eks" {
   cluster_version                          = var.cluster_version
   cluster_endpoint_public_access           = var.cluster_endpoint_public_access
   enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
+  cluster_upgrade_policy = {
+    support_type = var.cluster_upgrade_policy
+  }
 
   cluster_addons = {
-    coredns                = {}
-    eks-pod-identity-agent = {}
-    kube-proxy             = {}
-    vpc-cni                = {}
+    coredns = {
+      resolve_conflicts = "OVERWRITE"
+      most_recent       = true
+    }
+    kube-proxy = {
+      resolve_conflicts = "OVERWRITE"
+      most_recent       = true
+    }
+    vpc-cni = {
+      resolve_conflicts = "OVERWRITE"
+      most_recent       = true
+    }
   }
 
   eks_managed_node_groups = {
